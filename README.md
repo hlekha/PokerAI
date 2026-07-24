@@ -1,5 +1,9 @@
 # Poker AI
 
+<p align=center>
+  <img width="648" height="486" alt="Las Vegas Wtf GIF by Looney Tunes" src="https://github.com/user-attachments/assets/6bb93a09-cda1-479e-a70b-f5730a2118af" />
+</p>
+
 ## Purpose
 Aimed at perfecting the performance of the game Poker, this agent was built to optimize profit and win-rate, while automating the decision-making process given information about the game state. Specifically, this agent is tailored for the heads-up variation of Poker, which acts just like a Texas and Hold 'em game, but is strictly two players - where the small blind plays first only at the preflop stage. 
 This agent utilizes the intersection of reinforcement and deep learning - the Double Deep Q-Network (DDQN), which utilizes Q-learning, and two deep neural networks. For more insight about this hop over to the [Key Features (##key-features)] section.
