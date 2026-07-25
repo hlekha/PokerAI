@@ -30,4 +30,8 @@ To fix this, I reframed the bet history logic so that instead of a deque that on
 <p align=center>
   <img width="591" height="454" alt="thirditeration" src="https://github.com/user-attachments/assets/47222500-3069-4703-abec-ec5ee22af0b5" />
 </p>
-Futhermore, we are actually able to see the rolling average of the rewards. However, progress still needs to be made, as the rewards seem to be bounded by 1.0; this is possibly due to the bot learning a fold early strategy that although produces a positive profit, is a very minimal one.
+Futhermore, we are actually able to see the rolling average of the rewards which with a brief verification of this fix's success with 10 times as much episodes, we observe that the rewards moving average seems to converge to around 0.75 reward. Keep in mind that this is the normalized amount of rewards, meaning that the agent is actually learning to achieve average rewards of 75% of its stack. The plot with longer episodes is seen below:
+<p align=center>
+  <img width="582" height="457" alt="verify" src="https://github.com/user-attachments/assets/0b506ee3-af67-496e-a21e-36da294b8b11" />
+</p>
+
