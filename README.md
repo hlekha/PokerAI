@@ -23,7 +23,9 @@ The DDQN is an extremely impressive, and intuituve method of building an agent, 
 
 ## Usage
 Running the program will automatically prompt you to enter the necessary details like the stack amount, the cards in your hand, and the blind amount. From there the hand will enter a loop of recieving information about the board cards, and opponent actions, and outputting the respective optimal action. By the end up of it you'll be filthy rich, and will win so much, your opponents will suspect you of cheating. 
-
+<p align=center>
+  <img width="400" height="362" alt="Screenshot 2026-07-26 095709" src="https://github.com/user-attachments/assets/2fa69368-d69b-498a-8277-c6aaedcdeb05" />
+</p>
 Some things you can adjust in the code to change how you want the training of the agent to alter are the hyperparamters. Currently they are set at:
 ```python
 BATCH = 256
@@ -37,8 +39,9 @@ ALPHA = 3e-4
 talk about what cahnging each hyperparameter does
 talk about chjanging episode amount and the calcualtion for eps decay
 talk about how  aplot demonstrating the loss and reward function are updated live
-
-
+<p align=center>
+  <img width="407" height="377" alt="Screenshot 2026-07-26 095831" src="https://github.com/user-attachments/assets/7ab985e2-d0c4-413e-9ef6-e5280d7396c9" />
+</p>
 ## License
 Distributed under the Apache-2.0 License. See LICENSE for more information.
 
