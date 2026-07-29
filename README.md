@@ -4,9 +4,16 @@
   <img width="640" height="380" alt="Las Vegas Wtf GIF by Looney Tunes" src="https://github.com/user-attachments/assets/6bb93a09-cda1-479e-a70b-f5730a2118af" />
 </p>
 
-## Purpose
+## Overview
 Aimed at perfecting the performance of the game Poker, this agent was built to optimize profit and win-rate, while automating the decision-making process given information about the game state. Specifically, this agent is tailored for the heads-up variation of Poker, which acts just like a Texas and Hold 'em game, but is strictly two players - where the small blind plays first only at the preflop stage. 
 This agent utilizes the intersection of reinforcement and deep learning - the Double Deep Q-Network (DDQN), which utilizes Q-learning, and two deep neural networks. For more insight about this hop over to the [Key Features (##key-features)] section.
+
+
+
+## Architecture 
+<p align=center>
+  <img width="1471" height="644" alt="architecture" src="https://github.com/user-attachments/assets/710e229c-23d7-4175-80db-b1fbcf91e7fa" />
+</p>
 
 ## Prerequisites
 This code depends on the following libraries to be installed: gymnasium, for the environment building; matplotlib to see a graphical representation of the performance; torch for constructing the neural network; treys for its hand strength calculator, and simulating a deck of cards; as well as numpy for its respective functions.
@@ -42,6 +49,7 @@ talk about how  aplot demonstrating the loss and reward function are updated liv
 <p align=center>
   <img width="407" height="377" alt="Screenshot 2026-07-26 095831" src="https://github.com/user-attachments/assets/7ab985e2-d0c4-413e-9ef6-e5280d7396c9" />
 </p>
+
 ## License
 Distributed under the Apache-2.0 License. See LICENSE for more information.
 
