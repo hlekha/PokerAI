@@ -12,7 +12,7 @@ This agent utilizes the intersection of reinforcement and deep learning - the Do
 
 ## Architecture 
 <p align=center>
-  <img width="1471" height="644" alt="architecture" src="https://github.com/user-attachments/assets/710e229c-23d7-4175-80db-b1fbcf91e7fa" />
+  <img width="1471" height="644" alt="architecture" src="https://github.com/user-attachments/assets/f1bbc3d6-942d-47d5-b75d-14ec578ef50d" />
 </p>
 
 ## Prerequisites
