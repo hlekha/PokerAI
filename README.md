@@ -1,5 +1,9 @@
 # Poker AI
 
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![Framework](https://img.shields.io/badge/Framework-PyTorch%20%2F%20gymnasium-orange.svg)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 <p align=center>
   <img width="640" height="380" alt="Las Vegas Wtf GIF by Looney Tunes" src="https://github.com/user-attachments/assets/6bb93a09-cda1-479e-a70b-f5730a2118af" />
 </p>
@@ -10,45 +14,44 @@ This agent utilizes the intersection of reinforcement and deep learning - the Do
 
 
 
-## Architecture 
+## Architecture
 <p align=center>
   <img width="1471" height="644" alt="architecture" src="https://github.com/user-attachments/assets/f1bbc3d6-942d-47d5-b75d-14ec578ef50d" />
 </p>
 
-## Prerequisites
-This code depends on the following libraries to be installed: gymnasium, for the environment building; matplotlib to see a graphical representation of the performance; torch for constructing the neural network; treys for its hand strength calculator, and simulating a deck of cards; as well as numpy for its respective functions.
-```shell
-pip install gymnasium
-pip install numpy
-pip install matplotlib
-pip install torch
-pip install treys
-```
-
-## Key Features
-The DDQN is an extremely impressive, and intuitive method of building an agent, it is much like training a pet. This neural network essentially solves the Bellman Optimality Equation by instead utilizing methods such as gradient descent, experience replay, an epsilon-greedy policy, and a second neural network that separates the agent from evaluating an action, and actually selecting it. Paired with a custom environment, as well as a Monte-Carlo hand-equity calculator that calculates the equity of your hand by utilizing Monte Carlo simulations.
-
-## Usage
-Running the program will automatically prompt you to enter the necessary details like the stack amount, the cards in your hand, and the blind amount. From there the hand will enter a loop of receiving information about the board cards, and opponent actions, and outputting the respective optimal action. By the end up of it you'll be filthy rich, and will win so much, your opponents will suspect you of cheating. 
+## Results & Performance
 <p align=center>
-  <img width="400" height="362" alt="Screenshot 2026-07-26 095709" src="https://github.com/user-attachments/assets/2fa69368-d69b-498a-8277-c6aaedcdeb05" />
+  <img width="407" height="377" alt="final_reward_matched_resolution" src="https://github.com/user-attachments/assets/35416174-fad4-424c-96b6-e1e68ecafb74" />
 </p>
-Some things you can adjust in the code to change how you want the training of the agent to alter are the hyperparameters. Currently they are set at:
-```python
-BATCH = 256
-GAMMA = 0.97
-EPS_0 = 0.9
-EPS_FINAL = 0.01
-EPS_DECAY = 300
-TAU = 0.005
-ALPHA = 3e-4
-```
-talk about what cahnging each hyperparameter does
-talk about chjanging episode amount and the calcualtion for eps decay
-talk about how  aplot demonstrating the loss and reward function are updated live
+
 <p align=center>
   <img width="407" height="377" alt="Screenshot 2026-07-26 095831" src="https://github.com/user-attachments/assets/7ab985e2-d0c4-413e-9ef6-e5280d7396c9" />
 </p>
+
+
+
+## Strategy
+
+### State Space
+
+### Action Space
+
+For more in depth details for each component of this project go to [docs](./docs/).
+
+## Getting Started
+
+### Stack
+* **Language**: Python 
+* **Reinforcement Learning Tools**: PyTorch and gymnasium 
+* **Key Libraries**: NumpPy, treys, matplotlib
+
+### Prerequisites
+This code depends on the following libraries to be installed: gymnasium, for the environment building; matplotlib to see a graphical representation of the performance; torch for constructing the neural network; treys for its hand strength calculator, and simulating a deck of cards; as well as numpy for its respective functions.
+
+```bash
+pip install -r requirements.txt
+```
+
 
 ## Future Improvements
 Currently the agent exhibits a high bias towards choosing the all-in action. Since each episode simulates a single hand, during training the agent is only alive for one hand per episode; the agent's objective is to maximize expected reward for a given episode, the agent believes that it only has one hand to play to maximize its stack. As a result, the agent decides that betting its entire stack is the best way to do optimize. It neglects the variance and accepts more risk, adopting an all-or-nothing mentality.
