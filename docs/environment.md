@@ -1,5 +1,5 @@
 # Environment
-If you do not know Poker terminology I recommend you refer to [Poker Terminology](poker-terminology).
+If you are not familiar with poker terminology I recommend that you refer to [Poker Knowledge](PokerKnowledge.md).
 
 Utilizing (formerly OpenAI's gym) gymnasium's API, I developed a custom reinforcement learning environment from which my agent can live, commit actions, and record its observations. Through the use of gymnasium's framework, I was able to implement a poker engine, and use it to simulate the heads-up poker game and assist the functionality of gymnasium's reset and step functions. Gymnasium's framework helps to collect data on the current state of the agent, the consequences of the agents actions, and the accompanying total expected reward thereof.  
 
