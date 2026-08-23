@@ -10,7 +10,8 @@
 </p>
 
 ## Overview
-Aimed at perfecting the performance of the game Poker, this agent was built to optimize profit and win-rate, while automating the decision-making process given information about the game state. Specifically, this agent is tailored for the heads-up variation of Poker, which acts just like a Texas and Hold'em game, but is strictly two players - where the small blind plays first only at the preflop stage. 
+A reinforcement learning poker agent built with PyTorch and Gymnasium that learns heads-up Texas Hold'em decision-making through a Double Deep Q-Network (DDQN). This agent was built to optimize profit and win-rate, while automating the decision-making process given information about the game state. 
+
 This agent utilizes the intersection of reinforcement and deep learning - the Double Deep Q-Network (DDQN), which utilizes Q-learning, and two deep neural networks. For more insight about this hop over to the [Key Features (##key-features)] section.
 
 
@@ -61,7 +62,7 @@ pip install -r requirements.txt
 
 | | Batch | $\gamma$ | $\epsilon _0$ | $\epsilon _{final}$ | $\epsilon _{decay}$ | $\tau$ | $\alpha$ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| **Significance** | Cell 1 | Cell 2 | Cell 3 | Cell 4 | Cell 5 | Cell 6 | Cell 6 |
+| **Significance** | Cell 1 | The discount rate. How much the agent values total rewards compared to its immediate rewards. The purpose of this is to make the agent consider long-term consequences of its actions.| The exploration rate. It is the probability of the agent choosing a random action over the optimal action. The purpose of this parameter is to let the agent explore for new potentially (more) optimal routes while taking advantage of the current optimal route it knows. | What epsilon will decay to after training is complete | The decay rate for exploration. It controls how fast epsilon decreases from $\epsilon_0$ to $\epsilon_{final}$  | The soft updates. How much of the online network's weights are blended in the target's network at each training step. The value is usually really low so that the target network shifts into the online network smoothly. This avoids oscillations and divergence in training.  | The learning rate. How much the agent considers new information relative to the existing information. The purpose of this parameter is to choose how quickly the agent adapts to new information. The more information is processes the slower the program will be , the lower the value the more conservative it will be. |
 | **Input** | 256 | 0.97 | 0.90 | 0.01 | 113750 | 0.005 | 3e-4 |
 </div>
 
