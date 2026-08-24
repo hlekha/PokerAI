@@ -9,17 +9,71 @@
   <img width="640" height="380" alt="Las Vegas Wtf GIF by Looney Tunes" src="https://github.com/user-attachments/assets/6bb93a09-cda1-479e-a70b-f5730a2118af" />
 </p>
 
+## Table of Contents
+
+In this README I will talk briefly about:
+- [**Overview**](#overview)
+- [**Key Features**](#key-features)
+- [**The Mechanics**](#the-mechanics) \
+. . . . . . . . . . . . . . . [_Architecture_](#architecture) \
+. . . . . . . . . . . . . . . [_Monte Carlo Equity Calculator_](#monte-carlo-equity-calculator) \
+. . . . . . . . . . . . . . . [_State Space_](#state-space) \
+. . . . . . . . . . . . . . . [_Action Space_](#action-space) \
+. . . . . . . . . . . . . . . [_DDQN_](#DDQN)
+- [**Training**](training) \
+. . . . . . . . . . . . . . . [_Hyperparameters_](#hyperparameters) \
+. . . . . . . . . . . . . . . [_Reward Function_](#reward-function) 
+- [**Results & Performance**](#results--performance)
+- [**Current Limitations**](#current-limitations)
+- [**Getting Started**](#getting-started)
+- [**Future Improvements**](#future-improvements)
+- [**License**](#license)
+- [**Contact**](#contact)
+
 ## Overview
 A reinforcement learning poker agent built with PyTorch and Gymnasium that learns heads-up Texas Hold'em decision-making through a Double Deep Q-Network (DDQN). This agent was built to optimize profit and win-rate, while automating the decision-making process given information about the game state. 
 
-This agent utilizes the intersection of reinforcement and deep learning - the Double Deep Q-Network (DDQN), which utilizes Q-learning, and two deep neural networks. For more insight about this hop over to the [Key Features (##key-features)] section.
+This agent utilizes the intersection of reinforcement and deep learning - the Double Deep Q-Network (DDQN), which utilizes Q-learning, and two deep neural networks. 
 
+## Key Features
 
+## The Mechanics
 
-## Architecture
+### Architecture
 <p align=center>
   <img width="1471" height="644" alt="architecture" src="https://github.com/user-attachments/assets/f1bbc3d6-942d-47d5-b75d-14ec578ef50d" />
 </p>
+
+### Monte Carlo Equity Calculator
+
+### State Space
+
+### Action Space
+
+### DDQN
+
+
+## Training
+
+For a more in depth description of this component of the code [go here](./docs/DDQN_Training.py)
+
+### Hyperparameters
+
+
+<div align="center">
+
+
+| | Batch | $\gamma$ | $\epsilon _0$ | $\epsilon _{final}$ | $\epsilon _{decay}$ | $\tau$ | $\alpha$ |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **Significance** | Cell 1 | The discount rate. How much the agent values total rewards compared to its immediate rewards. The purpose of this is to make the agent consider long-term consequences of its actions.| The exploration rate. It is the probability of the agent choosing a random action over the optimal action. The purpose of this parameter is to let the agent explore for new potentially (more) optimal routes while taking advantage of the current optimal route it knows. | What epsilon will decay to after training is complete | The decay rate for exploration. It controls how fast epsilon decreases from $\epsilon_0$ to $\epsilon_{final}$  | The soft updates. How much of the online network's weights are blended in the target's network at each training step. The value is usually really low so that the target network shifts into the online network smoothly. This avoids oscillations and divergence in training.  | The learning rate. How much the agent considers new information relative to the existing information. The purpose of this parameter is to choose how quickly the agent adapts to new information. The more information is processes the slower the program will be , the lower the value the more conservative it will be. |
+| **Input** | 256 | 0.97 | 0.90 | 0.01 | 113750 | 0.005 | 3e-4 |
+</div>
+
+### Reward Function
+
+The reward function is built inside the environment but, since it's a crucial step in the training I will talk about it here. The reward function is made up of "terminal" rewards that the agent receives only when he reaches the terminal state - which in our case is the end of a poker game - and the intermediate rewards which I calculated based on an edge metric and a scale factor of 0.3. The scale factor still needs to be tested for the optimal number, but is used to make the edge metric not too significant where the agent overestimates the value of certain action, but not too inconsequential where the agent underestimates the value. The edge is calculated using the difference from the win rate and the pot odds (the ratio of call amount to the pot plus the call amount). The final reward per game is the cumulation of the intermediate rewards as well as the terminal rewards.
+
+The purpose of the intermediate rewards is to reduce the foresight that the agent needs. Since the probability of winning from the start of the poker game to the end is so volatile, and its final payoff (the accompanying reward for winning) is so distant, the agent needs more signals so it understands more complex patterns of the game. This technique of reward shaping also helps to accelerate training time and sample efficiency. 
 
 ## Results & Performance
 <p align=center>
@@ -31,14 +85,9 @@ This agent utilizes the intersection of reinforcement and deep learning - the Do
 </p>
 
 
-
-## Strategy
-
-### State Space
-
-### Action Space
-
 For more in depth details for each component of this project go to [docs](./docs/).
+
+## Current Limitations
 
 ## Getting Started
 
@@ -54,17 +103,7 @@ This code depends on the following libraries to be installed: gymnasium, for the
 pip install -r requirements.txt
 ```
 
-### Hyperparameters
 
-
-<div align="center">
-
-
-| | Batch | $\gamma$ | $\epsilon _0$ | $\epsilon _{final}$ | $\epsilon _{decay}$ | $\tau$ | $\alpha$ |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| **Significance** | Cell 1 | The discount rate. How much the agent values total rewards compared to its immediate rewards. The purpose of this is to make the agent consider long-term consequences of its actions.| The exploration rate. It is the probability of the agent choosing a random action over the optimal action. The purpose of this parameter is to let the agent explore for new potentially (more) optimal routes while taking advantage of the current optimal route it knows. | What epsilon will decay to after training is complete | The decay rate for exploration. It controls how fast epsilon decreases from $\epsilon_0$ to $\epsilon_{final}$  | The soft updates. How much of the online network's weights are blended in the target's network at each training step. The value is usually really low so that the target network shifts into the online network smoothly. This avoids oscillations and divergence in training.  | The learning rate. How much the agent considers new information relative to the existing information. The purpose of this parameter is to choose how quickly the agent adapts to new information. The more information is processes the slower the program will be , the lower the value the more conservative it will be. |
-| **Input** | 256 | 0.97 | 0.90 | 0.01 | 113750 | 0.005 | 3e-4 |
-</div>
 
 ## Future Improvements
 Currently the agent exhibits a high bias towards choosing the all-in action. Since each episode simulates a single hand, during training the agent is only alive for one hand per episode; the agent's objective is to maximize expected reward for a given episode, the agent believes that it only has one hand to play to maximize its stack. As a result, the agent decides that betting its entire stack is the best way to do optimize. It neglects the variance and accepts more risk, adopting an all-or-nothing mentality.
@@ -82,7 +121,4 @@ Distributed under the Apache-2.0 License. See LICENSE for more information.
 
 ## Contact 
 My LinkedIn: https://linkedin.com/in/hayden-lekha
-
-My Email: haydenlekha@gmail.com
-
 Project Link: https://github.com/hlekha/PokerAI
