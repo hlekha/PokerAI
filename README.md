@@ -9,6 +9,9 @@
   <img width="640" height="380" alt="Las Vegas Wtf GIF by Looney Tunes" src="https://github.com/user-attachments/assets/6bb93a09-cda1-479e-a70b-f5730a2118af" />
 </p>
 
+_**A heads-up No-Limit Texas Hold'em poker agent trained under a Double Deep Q-Network using a custom gymnasium environment, a Monte Carlo equity calculator, and much more!**_
+
+
 ## Table of Contents
 
 In this README I will talk briefly about:
@@ -37,7 +40,28 @@ This agent utilizes the intersection of reinforcement and deep learning - the Do
 
 ## Key Features
 
-## The Mechanics
+This project utilizes many technical tools, all of which I will go into more detail in other sections, but to briefly summarize:
+
+- **Custom Gymnasium Environment** — Creates an environment for the agent to live in, while modelling action consequences, retrieving  and showdown logic.
+
+- **Double Deep Q-Learning** — Utilizes two neural networks to optimally learn action values from its own simulated experiences.
+
+- **Experience Replay & Target Network** — Uses replay memory and soft target network updates to improve training stability and time.
+
+- **Monte Carlo Simulations** — Uses probability theory and simulations to estimate the win rate given its current hand and board.
+
+- **Poker State Representation** — Incorporates hand equity, pot odds, effective stack, position, opponent aggression, street, and betting state.
+
+- **Discrete Action Space** — Supports folding, checking, calling, multiple bet sizes, and all-in decisions.
+
+- **Poker Engine** — Models poker rules (for the respective poker variation) with betting rounds, variable stack sizes, position, blinds, and dealing.
+
+- **Reward Shaping** — Uses equity and pot odds for calculating intermediate rewards to guide learning.
+
+- **Playable Trained Model** — Saved model weights can be loaded into an interactive interface for real poker decisions.
+
+
+## The Mechanics  
 
 ### Architecture
 <p align=center>
@@ -84,8 +108,6 @@ The purpose of the intermediate rewards is to reduce the foresight that the agen
   <img width="407" height="377" alt="Screenshot 2026-07-26 095831" src="https://github.com/user-attachments/assets/7ab985e2-d0c4-413e-9ef6-e5280d7396c9" />
 </p>
 
-
-For more in depth details for each component of this project go to [docs](./docs/).
 
 ## Current Limitations
 
