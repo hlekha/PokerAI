@@ -20,6 +20,7 @@ In this README I will talk briefly about:
 - [**The Mechanics**](#the-mechanics) \
 . . . . . . . . . . . . . . . [_Architecture_](#architecture) \
 . . . . . . . . . . . . . . . [_Monte Carlo Equity Calculator_](#monte-carlo-equity-calculator) \
+. . . . . . . . . . . . . . . [_Environment_](#state-space) \
 . . . . . . . . . . . . . . . [_State Space_](#state-space) \
 . . . . . . . . . . . . . . . [_Action Space_](#action-space) \
 . . . . . . . . . . . . . . . [_DDQN_](#DDQN)
@@ -70,6 +71,11 @@ This project utilizes many technical tools, all of which I will go into more det
 
 ### Monte Carlo Equity Calculator
 
+Equity in poker regards to the probability that the player's hand will win against the opponent's, given the known board cards. This component of the code estimates this probability using Monte Carlo simulations 
+
+### Environment 
+
+Every RL agent needs an environment to live within, this RL agent uses a custom built environment using gymnasium. The environment features a poker engine that helps to enforce the rules of the respective poker variation, as well as 
 ### State Space
 
 ### Action Space
