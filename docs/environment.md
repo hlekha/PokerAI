@@ -11,7 +11,8 @@ At its core is an observation/state space of 11 elements, and a discrete action 
 
 The state space is used to determine what information the agent has access to and what variables should be updated, tracked, and reset over the course of the agent's training. 
 
-
+<div align="center">
+  
 | State Feature | Range | Description |
 | -------- | -------- | -------- |
 | Hand Equity    | 0-1     | Probability of having the winning hand     |
@@ -25,11 +26,13 @@ The state space is used to determine what information the agent has access to an
 | Street    | 0-1     | Betting street normalized     |
 | Opponent Last Action   | 0-6     | Representation of opponent's actions (same as action space)     |
 | Betting Ongoing   | 0 or 1     | Boolean flag of if betting round is active or not     |
-
+  
+</div>
 
 The action space is used to represent the actions the agent is allowed to take, with each integer of the set corresponding to a poker action.
 
-
+<div align="center">
+  
 | Action | Decision | Description |
 | :--- | :--- | :--- |
 | 0 | Fold | Concede the game and the pot |
@@ -39,6 +42,8 @@ The action space is used to represent the actions the agent is allowed to take, 
 | 4 | 100% Pot | Calls any outstanding bet and bets/raises 100% if the pot |
 | 5 | 125% Pot | Calls any outstanding bet and bets/raises 125% if the pot |
 | 6 | All-in | Commits the agent's entire stack |
+
+</div>
 
 At first, I thought a continuous action space was best, since the agent can bet any integer amount from 1-amount of current stack, but realized this to be inefficient. The simplification of the action space using a discrete set of pot-relative bet rises leads to simpler - hence easier for the agent - learning; particularly when assigning a Q-value for the action space, if the space were continuous the agent would need to assign a Q-value for every possible chip amount, but with the discrete space the agent only has to estimate the expected value of the seven elements.
 
