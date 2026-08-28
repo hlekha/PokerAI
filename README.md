@@ -111,7 +111,7 @@ The purpose of the intermediate rewards is to reduce the foresight that the agen
 <p align=center>
   <img width="407" height="377" alt="final_reward_matched_resolution" src="https://github.com/user-attachments/assets/35416174-fad4-424c-96b6-e1e68ecafb74" />
 </p>
-
+Unfortunatley, the resolution got botched. After some research, and a query to Claude, this is more because of the resolution of my PC
 <p align=center>
   <img width="407" height="377" alt="Screenshot 2026-07-26 095831" src="https://github.com/user-attachments/assets/7ab985e2-d0c4-413e-9ef6-e5280d7396c9" />
 </p>
@@ -203,8 +203,8 @@ I plan to improve this design by reframing the reward function so that the agent
 Although these changes would likely inflict a lower average profit per single hand, the agent will react with stable return, longer gameplay (more fun), better risk tolerance, and improved decision-making.
 
 ## License
-Distributed under the Apache-2.0 License. See LICENSE for more information.
+Distributed under the Apache-2.0 License. See [LICENSE](LICENSE) for more information.
 
 ## Contact 
-My LinkedIn: https://linkedin.com/in/hayden-lekha
+My LinkedIn: https://linkedin.com/in/hayden-lekha \
 Project Link: https://github.com/hlekha/PokerAI
