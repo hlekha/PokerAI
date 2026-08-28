@@ -21,8 +21,6 @@ In this README I will talk briefly about:
 . . . . . . . . . . . . . . . [_Architecture_](#architecture) \
 . . . . . . . . . . . . . . . [_Monte Carlo Equity Calculator_](#monte-carlo-equity-calculator) \
 . . . . . . . . . . . . . . . [_Environment_](#state-space) \
-. . . . . . . . . . . . . . . [_State Space_](#state-space) \
-. . . . . . . . . . . . . . . [_Action Space_](#action-space) \
 . . . . . . . . . . . . . . . [_DDQN_](#DDQN)
 - [**Training**](training) \
 . . . . . . . . . . . . . . . [_Hyperparameters_](#hyperparameters) \
@@ -84,10 +82,6 @@ The environment also calculates rewards. This calculation is based on the change
 
 The purpose of this environment is to expose raw game information to the neural network. It does this by obtaining an observation vector which collects select information about the game state like hand equity. These observations get passed through the DDQN every episode, and is used for training and optimizes the network. I delve deeper about this crucial component [here](./docs/environment.md).
 
-### State Space
-
-### Action Space
-
 ### DDQN
 For a more in depth description of this component of the code go [here](./docs/ddqn.md)
 
@@ -123,8 +117,6 @@ The purpose of the intermediate rewards is to reduce the foresight that the agen
 </p>
 
 
-## Current Limitations
-
 ## Getting Started
 
 ### Stack
@@ -133,16 +125,74 @@ The purpose of the intermediate rewards is to reduce the foresight that the agen
 * **Key Libraries**: NumpPy, treys, matplotlib
 
 ### Prerequisites
-This code depends on the following libraries to be installed: gymnasium, for the environment building; matplotlib to see a graphical representation of the performance; torch for constructing the neural network; treys for its hand strength calculator, and simulating a deck of cards; as well as numpy for its respective functions.
+This code depends on the following libraries to be installed: **gymnasium**, for the environment building; **matplotlib** to see a graphical representation of the performance; **PyTorch** for constructing the neural network; **treys** for its hand strength calculator, and simulating a deck of cards; as well as **numpy** for its respective functions. You must also make sure that you have Python 3 and pip installed.
 
+
+### Installation
+
+1. Clone the repo
+```bash
+git clone https://github.com/hlekha/PokerAI.git
+cd PokerAI
+```
+2. Create a virtual environment
+_For Windows_:
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+_For macOS/Linux_:
+```Zsh
+python3 -m venv .venv
+source .venv/bin/activate
+```
+3. Install the dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
+### How to Train
+To begin training the DDQN agent, run:
+```bash
+python src/DDDQN_Training.py
+```
+Once training is complete the policy network weights are saved and can be loaded later for inference.
+
+If you want to run the trained agent then run the following script:
+```bash
+python src/inference.py
+```
+This will allow you to prompt the user about information regarding the game, and will continue its prompts until the user ends it. Until then, after the information is sent to the agent, the agent prints out the optimal action for the given scenario.
+
+## Current Limitations
+
+Although the agent is capable of learning poker actions via reinforcement learning, there are some restrictions in place in the current implementation that influence the strategies in an unfavorable way.
+
+### Single-Hand Optimization
+
+Currently, due to the terminal state being the end of a single poker hand, each individual poker hand is optimized separately. This means that the agent's objective is the maximization of its expected reward for an individual hand rather than maximization of long-term profitability.
+
+One side effect that was observed during training was the agent's tendency to employ very aggressive plays, including all-ins. Even though the agent receives positive expected reward in the current environment by doing so, it does not learn about the long-term effects of taking too many risks since chip preservation and future hands are not included in the agent's objective.
+
+
+### Simplified Opponent Model
+
+Since the current training opponent selects the actions it wants to take randomly, the agent is more geared towards exploiting a stochastic opponent than to playing against a realistic poker opponent.
+
+Furthermore, the state feature, opponent aggression, lose their meaning since the opponent does not have any consistent behavior. Training against multiple opponent strategies or previous versions of the agent could add variety into the learning process.
+
+### Uniform Opponent Hand Range
+
+The equity calculator uses the assumption that the opponent's unknown hole cards are uniformly distributed between the cards that remain in the deck.
+
+However, in real poker, the player's actions provide valuable information about their hand. For instance, a raise can increase the likelihood of some strong hand significantly more than it was beforehand. In the current environment, this information is disregarded.
+
+Future versions of the environment could estimate the ranges of opponent's hole cards from their betting and use these ranges in their Monte Carlo simulations.
+
 
 
 ## Future Improvements
-Currently the agent exhibits a high bias towards choosing the all-in action. Since each episode simulates a single hand, during training the agent is only alive for one hand per episode; the agent's objective is to maximize expected reward for a given episode, the agent believes that it only has one hand to play to maximize its stack. As a result, the agent decides that betting its entire stack is the best way to do optimize. It neglects the variance and accepts more risk, adopting an all-or-nothing mentality.
+As talked about in single-hand optimization, the agent exhibits a high bias towards choosing the all-in action. Since each episode simulates a single hand, during training the agent is only alive for one hand per episode; the agent's objective is to maximize expected reward for a given episode, the agent believes that it only has one hand to play to maximize its stack. As a result, the agent decides that betting its entire stack is the best way to do optimize. It neglects the variance and accepts more risk, adopting an all-or-nothing mentality.
 
 This reckless behavior signals that there is a mismatch between the optimization objective and how poker is successfully played. While observing how poker is played professionally, I noticed players rarely go all-in and this is because going all-in introduces high variance. To minimize this professional players make decisions with long term success in mind - they optimize their risk-adjusted return with smaller bets to preserve their stack, and regulate risk management. As they experience more games, then they start deploying more aggressive strategies based on whatever mathematical model of the game they have in their mind. Conversely, due to the environment design, the agent has no concept of long term survival, thus it is unable to be conservative of its stack, mitigate its variance, and regulate the risk it accepts. As a result, it learns to deploy an "all-in all-the-time strategy," and while this aggressive strategy achieves a win rate of [enter metric] - and produces quick, massive profit when successful - it also leads to the agent overcommitting on hands of poor equity. 
 
