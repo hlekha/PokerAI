@@ -3,9 +3,44 @@ If you are not familiar with poker terminology I recommend that you refer to [Po
 
 Utilizing (formerly OpenAI's gym) gymnasium's API, I developed a custom reinforcement learning environment from which my agent can live, commit actions, and record its observations. Through the use of gymnasium's framework, I was able to implement a poker engine, and use it to simulate the heads-up poker game and assist the functionality of gymnasium's reset and step functions. Gymnasium's framework helps to collect data on the current state of the agent, the consequences of the agents actions, and the accompanying total expected reward thereof.  
 
-At its core is an observation space of 11 elements, and a discrete action space consisting of 7 elements representing fold, call, four different bet/raise amounts, and all-in. We use these spaces as the foundation of the environment - determining what information the agent has access to and what variables should be updated, tracked, and reset over the course of the agent's training. This implies the environment  is also responsible for updating the game state and enforcing poker rules.
+This environment ensures that the agent can learn from interacting with the environment across tens of thousands of episodes while consistently bounding it by betting mechanics, game progression, state transitions, and reward calculations. This implies the environment is also responsible for updating the game state and enforcing poker rules.
 
-This environment ensures that the agent can learn from interacting with the environment across tens of thousands of episodes while consistently bounding it by betting mechanics, game progression, state transitions, and reward calculations. 
+## State and Action Spaces
+
+At its core is an observation/state space of 11 elements, and a discrete action space consisting of 7 elements. We use spaces - a tool from the gymnasium API that help to represent mathematical sets - as the foundation of the environment. 
+
+The state space is used to determine what information the agent has access to and what variables should be updated, tracked, and reset over the course of the agent's training. 
+
+
+| State Feature | Range | Description |
+| -------- | -------- | -------- |
+| Hand Equity    | 0-1     | Probability of having the winning hand     |
+| Starting Stack    | 0-1     | Initial stack size, normalized from the environment's range for the stack     |
+| Pot Size    | 0-1     | Normalized pot size relative to the starting stack     |
+| Hero Stack    | 0-1     | Agent's current stack relative to its starting stack     |
+| Effective Stack    | 0-1     | The smaller of the hero and opponent stacks, normalized by starting stack     |
+| Position    | 0 or 1     | If agent is small or big blind     |
+| Pot Odds   | 0-1     | Ratio between amount required to call and the pot + that call amount     |
+| Opponent Aggression   | 0-5     | Ratio of opponent raises to calls     |
+| Street    | 0-1     | Betting street normalized     |
+| Opponent Last Action   | 0-6     | Representation of opponent's actions (same as action space)     |
+| Betting Ongoing   | 0 or 1     | Boolean flag of if betting round is active or not     |
+
+
+The action space is used to represent the actions the agent is allowed to take, with each integer of the set corresponding to a poker action.
+
+
+| Action | Decision | Description |
+| :--- | :--- | :--- |
+| 0 | Fold | Concede the game and the pot |
+| 1 | Check/Call | Matches the outstanding bet amount (check = 0)|
+| 2 | 33% Pot | Calls any outstanding bet and bets/raises 33% if the pot |
+| 3 | 67% Pot | Calls any outstanding bet and bets/raises 67% if the pot |
+| 4 | 100% Pot | Calls any outstanding bet and bets/raises 100% if the pot |
+| 5 | 125% Pot | Calls any outstanding bet and bets/raises 125% if the pot |
+| 6 | All-in | Commits the agent's entire stack |
+
+At first, I thought a continuous action space was best, since the agent can bet any integer amount from 1-amount of current stack, but realized this to be inefficient. The simplification of the action space using a discrete set of pot-relative bet rises leads to simpler - hence easier for the agent - learning; particularly when assigning a Q-value for the action space, if the space were continuous the agent would need to assign a Q-value for every possible chip amount, but with the discrete space the agent only has to estimate the expected value of the seven elements.
 
 ## Helper Functions
 
@@ -17,3 +52,5 @@ Additionally, the _get_obs function helps to collect the information you want fe
 ## Gymnasium Functions
 
 Traditionally,  in the gymnasium environment lives the constructor, step, and reset function. The constructor function creates all of the instance variables that we will be tracking across the environment. Furthermore, the step and reset functions are standard functions for a gymnasium environment. The step function’s purpose is to move the agent from its current state to its respective successive state based on the chosen action and call the observation function to observe and record the effect; the reset function resets the variables once the agent reaches the terminal state. 
+
+
