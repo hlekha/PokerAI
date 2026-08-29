@@ -21,7 +21,8 @@ In this README I will talk briefly about:
 . . . . . . . . . . . . . . . [_Architecture_](#architecture) \
 . . . . . . . . . . . . . . . [_Monte Carlo Equity Calculator_](#monte-carlo-equity-calculator) \
 . . . . . . . . . . . . . . . [_Environment_](#state-space) \
-. . . . . . . . . . . . . . . [_DDQN_](#DDQN)
+. . . . . . . . . . . . . . . [_DDQN_](#ddqn) \
+. . . . . . . . . . . . . . . [_Inference_](#inference)
 - [**Training**](training) \
 . . . . . . . . . . . . . . . [_Hyperparameters_](#hyperparameters) \
 . . . . . . . . . . . . . . . [_Reward Function_](#reward-function) 
@@ -83,8 +84,17 @@ The environment also calculates rewards. This calculation is based on the change
 The purpose of this environment is to expose raw game information to the neural network. It does this by obtaining an observation vector which collects select information about the game state like hand equity. These observations get passed through the DDQN every episode, and is used for training and optimizes the network. I delve deeper about this crucial component [here](./docs/environment.md).
 
 ### DDQN
-For a more in depth description of this component of the code go [here](./docs/ddqn.md)
+The agent learns its poker strategies through a Double Deep Q-Network, where the network is designed to approximate an action-value function, Q(s,a). This function is equal to the expected future reward of taking action, a, from the current state, s.
 
+We use the two Deep Q-Networks, where one is assigned to select the best action - while the other evaluates it. We use two instead of one so that we can avoid overfitting our Q-value estimates. 
+
+The network takes in the 11-dimensional observation vector, goes through a linear combination of weights and biases to two hidden layers of 256 nodes, one of 128 nodes, each applying the ReLU function to their nodes, and finally the output layer is the 7 Q-Values for the respective action space.
+
+For a more in depth description of this component of the code, including some of the math behind it, go [here](./docs/ddqn.md).
+
+### Inference
+The whole reason for the training is that we can test the agent and observe if it can handle the out of sample data well, and still return the great performance we saw in the training
+If you desire more about this component, go [here](./docs/inference.md)
 
 ## Training
 
