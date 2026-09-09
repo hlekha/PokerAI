@@ -93,7 +93,14 @@ The network takes in the 11-dimensional observation vector, goes through a linea
 For a more in depth description of this component of the code, including some of the math behind it, go [here](./docs/ddqn.md).
 
 ### Inference
-The whole reason for the training is that we can test the agent and observe if it can handle the out of sample data well, and still return the great performance we saw in the training
+The reason for the inference is that we can test the agent's ability to make optimal decisions and observe if it can handle out of sample data well, while returning the great performance we saw in the training. After training, the policy network weights are saved and loaded into this component so that the agent's learned knowledge can be used independently of the training environment.
+
+The framework of the infernece component is  similiar to that of the environment, where they both call the Monte Carlo Equity Calculator, use a similiar poker engine, and create an 11-Dimensional Observation vector. After the observation vector is made, it is fed to the trained policy network which assigns a Q-Value for each action where the max argument is then taken, and translated to the respective poker action.
+
+In inference, the value function becomes deterministic rather than using the epsilon-greedy policy. Hence, the agent does not require exploration, and just chooses the "greedy" action - that is the action with the greatest Q-value. 
+
+This component also provides interactive prompting to gather information describing the current state. The information aids in establishing the environment's numerical observation and so forth the observation vector. After the prompting is finished, all necessary game-state information has been collected, the vector is created and passed through the network's weights, and the recommended action is identified and printed.
+
 If you desire more about this component, go [here](./docs/inference.md)
 
 ## Training
@@ -122,7 +129,9 @@ The purpose of the intermediate rewards is to reduce the foresight that the agen
 <p align=center>
   <img width="407" height="377" alt="final_reward_matched_resolution" src="https://github.com/user-attachments/assets/35416174-fad4-424c-96b6-e1e68ecafb74" />
 </p>
-Unfortunatley, the resolution got botched. After some research, and a query to Claude, this is more because of the resolution of my PC
+
+_Disclaimer: Unfortunately, the resolution got botched. I've implemented the fix but because the training is so long, I'm not allowed to run it again._
+
 <p align=center>
   <img width="407" height="377" alt="Screenshot 2026-07-26 095831" src="https://github.com/user-attachments/assets/7ab985e2-d0c4-413e-9ef6-e5280d7396c9" />
 </p>
