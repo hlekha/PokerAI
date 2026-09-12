@@ -9,7 +9,7 @@
   <img width="640" height="380" alt="Las Vegas Wtf GIF by Looney Tunes" src="https://github.com/user-attachments/assets/6bb93a09-cda1-479e-a70b-f5730a2118af" />
 </p>
 
-_**A heads-up No-Limit Texas Hold'em poker agent trained under a Double Deep Q-Network using a custom gymnasium environment, a Monte Carlo equity calculator, and much more!**_
+_**A reinforcement learning agent intended to optimize the performance for the game of heads-up No-Limit Texas Hold'em Poker**_
 
 
 ## Table of Contents
@@ -34,15 +34,15 @@ In this README I will talk briefly about:
 - [**Contact**](#contact)
 
 ## Overview
-A reinforcement learning poker agent built with PyTorch and Gymnasium that learns heads-up Texas Hold'em decision-making through a Double Deep Q-Network (DDQN). This agent was built to optimize profit and win-rate, while automating the decision-making process given information about the game state. 
+A reinforcement learning poker agent built with PyTorch and Gymnasium that learns heads-up Texas Hold'em decision-making through a Double Deep Q-Network (DDQN). This agent was built to optimize profit and win rate while automating the decision-making process given the current game state. 
 
-This agent utilizes the intersection of reinforcement and deep learning - the Double Deep Q-Network (DDQN), which utilizes Q-learning, and two deep neural networks. This RREADME, as well as other documents in this repo will rely heavily on knowledge of poker terminology, for relevant and foundational dictionary of these terms, you can refer to this [dictionary](./docs/PokerKnowledge.md).
+This agent uses a Double Deep Q-Network - the intersection of reinforcement and deep learning - which utilizes Q-learning, and two deep neural networks. This README, as well as other documents in this repo relies heavily on knowledge of poker terminology. For relevant and foundational dictionary of these terms, you can refer to the [dictionary](./docs/PokerKnowledge.md).
 
 ## Key Features
 
-This project utilizes many technical tools, all of which I will go into more detail in other sections, but to briefly summarize:
+This project utilizes many technical tools, all of which I will go into more detail in other sections. Nevertheless, here is a brief summary:
 
-- **Custom Gymnasium Environment** — Creates an environment for the agent to live in, while modelling action consequences, retrieving  and showdown logic.
+- **Custom Gymnasium Environment** — Creates an environment for the agent to live in, while modelling action consequences, retrieving state information, and handling showdown logic.
 
 - **Double Deep Q-Learning** — Utilizes two neural networks to optimally learn action values from its own simulated experiences.
 
@@ -69,15 +69,15 @@ This project utilizes many technical tools, all of which I will go into more det
 </p>
 
 ### Monte Carlo Equity Calculator
-Equity in poker regards to the probability that the player's hand will win against the opponent's, given the known board cards. This component of the code estimates this probability using Monte Carlo simulations. My agent needs the equity as this is the agent's strongest signal in figuring out how strong its position in the game is. Since Poker is a game of incomplete information, where the agent doesn't know the opponent's cards nor the future community cards, the estimation of equity can help impute missing information with repeated sampling of the unknown cards; this is done by utilizing Monte Carlo simulations. 
+Equity in poker refers to the probability that the player's hand will win against the opponent's, given the known board cards. This component of the code estimates this probability using Monte Carlo simulations. The agent relies on equity as it's primary signal to determine the strength of its position in the game. Since Poker is a game of incomplete information, where the agent knows neither the opponent's cards nor the future community cards, the estimation of equity can help impute missing information with repeated sampling of unknown cards via Monte Carlo simulations. 
 
-For a single iteration of the MC simulation, the opponent is simulated as well as the remaining pieces of the board, using the treys library, we are able to evaluate the two poker hands against the board. The strengths of the two hands are then compared and if the hero's hand is stronger, the count is incremented. For more information on this component of the code go [here](./docs/mc_calculator.md).
+For a single iteration of the MC simulation, the opponent is simulated as well as the remaining pieces of the board. Using the Treys library, we are able to evaluate the two poker hands against the board. The strengths of the two hands are then compared and if the hero's hand is stronger, the count is incremented. For more information on this component of the code go [here](./docs/mc_calculator.md).
 
 ### Environment 
 
-Every RL agent needs an environment to live within, this RL agent uses a custom built environment using (formerly) OpenAI's gymnasium. The environment features a poker engine that helps to enforce the rules of and model a heads-up Texas Hold'em game, as well as the gymnasium standard reset, step, and _get_obs functions. The environment's helper functions (the methods excluding the gymnasium standard functions) manages the game state, card dealing, blinds, stacks, pot size, betting rounds, contributions, positions, and street progression. 
+Every RL agent needs an environment to live within, this RL agent uses a custom built environment based on Farama Foundation's (formerly OpenAI's) gymnasium. The environment features a poker engine that helps to enforce the rules of and model a heads-up Texas Hold'em game, as well as the gymnasium standard reset, step, and _get_obs functions. The environment's helper functions (the methods excluding the gymnasium standard functions) manage the game state, card dealing, blinds, stacks, pot size, betting rounds, contributions, positions, and street progression. 
 
-The step function's purpose is to simulate a step if the agent's path to the terminal state - from one state to the next. At each step, the agent selects one of seven discrete actions from fold to check/call to betting different bet sizes, to an all-in. The environment applies the action's consequences to the current game state, and simulates the opponent's reaction; this all aids in shifting the initial state towards the successive state. 
+The step function's purpose is to simulate a step along the agent's path to the terminal state - from one state to the next. At each step, the agent selects one of seven discrete actions from fold to check/call to betting different bet sizes, to an all-in. The environment applies the action's consequences to the current game state, and simulates the opponent's reaction; this all aids in shifting the initial state towards the successive state. 
 
 The environment also calculates rewards. This calculation is based on the changes in the agent's chip stack from the initial state to the terminal, and also utilizes reward shaping to reinforce the use of good strategies and aversion of foolish ones. 
 
@@ -129,14 +129,17 @@ The purpose of the intermediate rewards is to reduce the foresight that the agen
 <p align=center>
   <img width="407" height="377" alt="final_reward_matched_resolution" src="https://github.com/user-attachments/assets/35416174-fad4-424c-96b6-e1e68ecafb74" />
 </p>
+Reward has a relationship to episodes similar to that of a logarithmic function, where it initially grows upwards very fast, but as it grows its growth rate slows down leading to a convergence. In our graph, we see that same relationship, growing initially fast but then slowing down, with a convergence of around 0.75.
+
+This number may seem small, but recall that this number is actually the profit represented as a percentage of the initial stack. We can also observe that in the beginning of training the rewards are scattered more vigoursly, with its rolling mean being very volatile. In contrast, as we see the episode count near its end, that volatility settles down, and the data points less scattered - bunching up mostly around 1.0 (100 % profit).
 
 _Disclaimer: Unfortunately, the resolution got botched. I've implemented the fix but because the training is so long, I'm not allowed to run it again._
+
 
 <p align=center>
   <img width="407" height="377" alt="Screenshot 2026-07-26 095831" src="https://github.com/user-attachments/assets/7ab985e2-d0c4-413e-9ef6-e5280d7396c9" />
 </p>
-
-
+Here we see the Huber Loss function, a function
 ## Getting Started
 
 ### Stack
