@@ -4,17 +4,20 @@
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Framework](https://img.shields.io/badge/Framework-PyTorch%20%2F%20gymnasium-orange.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
-<p align=center>
+<div align="center">
+  
   <img width="640" height="380" alt="Las Vegas Wtf GIF by Looney Tunes" src="https://github.com/user-attachments/assets/6bb93a09-cda1-479e-a70b-f5730a2118af" />
-</p>
 
-_**A reinforcement learning agent intended to optimize the performance for the game of heads-up No-Limit Texas Hold'em Poker**_
+  _**A reinforcement learning agent designed to optimize the performance of heads-up No-Limit Texas Hold'em Poker**_
+  
+</div>
+
+
 
 
 ## Table of Contents
 
-In this README I will talk briefly about:
+This README covers:
 - [**Overview**](#overview)
 - [**Key Features**](#key-features)
 - [**The Mechanics**](#the-mechanics) \
