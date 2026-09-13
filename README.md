@@ -39,7 +39,7 @@ This README covers:
 ## Overview
 A reinforcement learning poker agent built with PyTorch and Gymnasium that learns heads-up Texas Hold'em decision-making through a Double Deep Q-Network (DDQN). This agent was built to optimize profit and win rate while automating the decision-making process given the current game state. 
 
-This agent uses a Double Deep Q-Network - the intersection of reinforcement and deep learning - which utilizes Q-learning, and two deep neural networks. This README, as well as other documents in this repo relies heavily on knowledge of poker terminology. For relevant and foundational dictionary of these terms, you can refer to the [dictionary](./docs/PokerKnowledge.md).
+This agent uses a Double Deep Q-Network (DDQN) which combines Q-learning, and  deep neural networks. This README, as well as other documents in this repo relies heavily on knowledge of poker terminology. For relevant and foundational dictionary of these terms, you can refer to the [dictionary](./docs/PokerKnowledge.md).
 
 ## Key Features
 
@@ -47,9 +47,9 @@ This project utilizes many technical tools, all of which I will go into more det
 
 - **Custom Gymnasium Environment** — Creates an environment for the agent to live in, while modelling action consequences, retrieving state information, and handling showdown logic.
 
-- **Double Deep Q-Learning** — Utilizes two neural networks to optimally learn action values from its own simulated experiences.
+- **Double Deep Q-Learning** — Utilizes two neural networks to learn action values from its own simulated experiences.
 
-- **Experience Replay & Target Network** — Uses replay memory and soft target network updates to improve training stability and time.
+- **Experience Replay & Target Network** — Uses replay memory and soft target network updates to improve training stability and sample efficiency.
 
 - **Monte Carlo Simulations** — Uses probability theory and simulations to estimate the win rate given its current hand and board.
 
@@ -59,9 +59,9 @@ This project utilizes many technical tools, all of which I will go into more det
 
 - **Poker Engine** — Models poker rules (for the respective poker variation) with betting rounds, variable stack sizes, position, blinds, and dealing.
 
-- **Reward Shaping** — Uses equity and pot odds for calculating intermediate rewards to guide learning.
+- **Reward Shaping** — Uses equity and pot odds to calculate intermediate rewards to guide learning.
 
-- **Playable Trained Model** — Saved model weights can be loaded into an interactive interface for real poker decisions.
+- **Playable Trained Model** — Saved model weights can be loaded into an interactive interface for poker decision making.
 
 
 ## The Mechanics  
@@ -72,39 +72,39 @@ This project utilizes many technical tools, all of which I will go into more det
 </p>
 
 ### Monte Carlo Equity Calculator
-Equity in poker refers to the probability that the player's hand will win against the opponent's, given the known board cards. This component of the code estimates this probability using Monte Carlo simulations. The agent relies on equity as it's primary signal to determine the strength of its position in the game. Since Poker is a game of incomplete information, where the agent knows neither the opponent's cards nor the future community cards, the estimation of equity can help impute missing information with repeated sampling of unknown cards via Monte Carlo simulations. 
+Equity in poker refers to the probability that a player's hand will win against an opponent's hand given the known board cards. This component estimates that probability using a Monte Carlo simulation. The agent relies on equity as one of its primary signals for determining the strength of its position in the game. Since Poker is a game of incomplete information, where the agent knows neither the opponent's cards nor the future community cards, the estimation of equity can help impute missing information with repeated sampling of unknown cards via a Monte Carlo simulation. 
 
 For a single iteration of the MC simulation, the opponent is simulated as well as the remaining pieces of the board. Using the Treys library, we are able to evaluate the two poker hands against the board. The strengths of the two hands are then compared and if the hero's hand is stronger, the count is incremented. For more information on this component of the code go [here](./docs/mc_calculator.md).
 
 ### Environment 
 
-Every RL agent needs an environment to live within, this RL agent uses a custom built environment based on Farama Foundation's (formerly OpenAI's) gymnasium. The environment features a poker engine that helps to enforce the rules of and model a heads-up Texas Hold'em game, as well as the gymnasium standard reset, step, and _get_obs functions. The environment's helper functions (the methods excluding the gymnasium standard functions) manage the game state, card dealing, blinds, stacks, pot size, betting rounds, contributions, positions, and street progression. 
+Every RL agent needs an environment to live within, this RL agent uses a custom-built environment based on Farama Foundation's (formerly OpenAI's) Gymnasium. The environment features a poker engine that helps to enforce the rules of and model a heads-up Texas Hold'em game, as well as the Gymnasium standard reset, step, and _get_obs functions. The environment's helper functions (the methods excluding the Gymnasium standard functions) manage the game state, card dealing, blinds, stacks, pot size, betting rounds, contributions, positions, and street progression. 
 
 The step function's purpose is to simulate a step along the agent's path to the terminal state - from one state to the next. At each step, the agent selects one of seven discrete actions from fold to check/call to betting different bet sizes, to an all-in. The environment applies the action's consequences to the current game state, and simulates the opponent's reaction; this all aids in shifting the initial state towards the successive state. 
 
-The environment also calculates rewards. This calculation is based on the changes in the agent's chip stack from the initial state to the terminal, and also utilizes reward shaping to reinforce the use of good strategies and aversion of foolish ones. 
+The environment also calculates rewards. This calculation is based on the changes in the agent's chip stack from the initial state to the terminal, and also utilizes reward shaping to reinforce the use of good strategies and aversion of poor ones. 
 
-The purpose of this environment is to expose raw game information to the neural network. It does this by obtaining an observation vector which collects select information about the game state like hand equity. These observations get passed through the DDQN every episode, and is used for training and optimizes the network. I delve deeper about this crucial component [here](./docs/environment.md).
+The purpose of this environment is to expose raw game information to the neural network. It does this by obtaining an observation vector which collects select information about the game state like hand equity. This vector is passed through the DDQN every episode, and is used for training. I delve deeper about this crucial component [here](./docs/environment.md).
 
 ### DDQN
 The agent learns its poker strategies through a Double Deep Q-Network, where the network is designed to approximate an action-value function, Q(s,a). This function is equal to the expected future reward of taking action, a, from the current state, s.
 
-We use the two Deep Q-Networks, where one is assigned to select the best action - while the other evaluates it. We use two instead of one so that we can avoid overfitting our Q-value estimates. 
+We use the two Deep Q-Networks, where one is assigned to select the best action - while the other evaluates it. We use two instead of one so that we can avoid overestimating our Q-value. 
 
 The network takes in the 11-dimensional observation vector, goes through a linear combination of weights and biases to two hidden layers of 256 nodes, one of 128 nodes, each applying the ReLU function to their nodes, and finally the output layer is the 7 Q-Values for the respective action space.
 
-For a more in depth description of this component of the code, including some of the math behind it, go [here](./docs/ddqn.md).
+For a more in-depth description of this component of the code, including some of the math behind it, go [here](./docs/ddqn.md).
 
 ### Inference
 The reason for the inference is that we can test the agent's ability to make optimal decisions and observe if it can handle out of sample data well, while returning the great performance we saw in the training. After training, the policy network weights are saved and loaded into this component so that the agent's learned knowledge can be used independently of the training environment.
 
-The framework of the infernece component is  similiar to that of the environment, where they both call the Monte Carlo Equity Calculator, use a similiar poker engine, and create an 11-Dimensional Observation vector. After the observation vector is made, it is fed to the trained policy network which assigns a Q-Value for each action where the max argument is then taken, and translated to the respective poker action.
+The framework of the inference component is  similar to that of the environment, where they both call the Monte Carlo Equity Calculator, use a similar poker engine, and create an 11-Dimensional Observation vector. After the observation vector is made, it is fed to the trained policy network which assigns a Q-Value for each action where the max argument is then taken, and translated to the respective poker action.
 
 In inference, the value function becomes deterministic rather than using the epsilon-greedy policy. Hence, the agent does not require exploration, and just chooses the "greedy" action - that is the action with the greatest Q-value. 
 
 This component also provides interactive prompting to gather information describing the current state. The information aids in establishing the environment's numerical observation and so forth the observation vector. After the prompting is finished, all necessary game-state information has been collected, the vector is created and passed through the network's weights, and the recommended action is identified and printed.
 
-If you desire more about this component, go [here](./docs/inference.md)
+For more information about this component, go [here](./docs/inference.md)
 
 ## Training
 
@@ -120,11 +120,11 @@ If you desire more about this component, go [here](./docs/inference.md)
 **$\epsilon _{decay}$**: The decay rate for exploration. It controls how fast epsilon decreases from $\epsilon_0$ to $\epsilon{final}$. _Set to 113750_ \
 **$\tau$**: The soft updates. How much of the online network's weights are blended in the target's network at each training step. The value is usually really low so that the target network shifts into the online network smoothly. This avoids oscillations and divergence in training. _Set to 0.005_ \
 **$\alpha$:** The learning rate. How much the agent considers new information relative to the existing information. The purpose of this parameter is to choose how quickly the agent adapts to new information. The more information is processes the slower the program will be , the lower the value the more conservative it will be. _Set to 3e-4_
-These hyper parameters should be changed to how you want the respective trade offs it inflicts to to be balanced. 
+These hyperparameters represent the current training setup and should be adjusted to how you want to balance the exploration, stabliilty, and speed of the agent.
 
 ### Reward Function
 
-The reward function is built inside the environment but, since it's a crucial step in the training I will talk about it here. The reward function is made up of "terminal" rewards that the agent receives only when he reaches the terminal state - which in our case is the end of a poker game - and the intermediate rewards which I calculated based on an edge metric and a scale factor of 0.3. The scale factor still needs to be tested for the optimal number, but is used to make the edge metric not too significant where the agent overestimates the value of certain action, but not too inconsequential where the agent underestimates the value. The edge is calculated using the difference from the win rate and the pot odds (the ratio of call amount to the pot plus the call amount). The final reward per game is the cumulation of the intermediate rewards as well as the terminal rewards.
+The reward function is built inside the environment but, since it's a crucial step in the training I will talk about it here. The reward function is made up of "terminal" rewards that the agent receives only when it reaches a terminal state - which in our case is the end of a poker game - and the intermediate rewards which I calculated based on an edge metric and a scale factor of 0.3. The scale factor still needs to be tested for the optimal number, but is used to make the edge metric not too significant where the agent overestimates the value of certain action, but not too inconsequential where the agent underestimates the value. The edge is calculated as the difference from the win rate and the pot odds (the ratio of call amount to the pot plus the call amount). The final reward per game is the sum of the intermediate rewards as well as the terminal rewards.
 
 The purpose of the intermediate rewards is to reduce the foresight that the agent needs. Since the probability of winning from the start of the poker game to the end is so volatile, and its final payoff (the accompanying reward for winning) is so distant, the agent needs more signals so it understands more complex patterns of the game. This technique of reward shaping also helps to accelerate training time and sample efficiency. 
 
@@ -132,11 +132,13 @@ The purpose of the intermediate rewards is to reduce the foresight that the agen
 <p align=center>
   <img width="407" height="377" alt="final_reward_matched_resolution" src="https://github.com/user-attachments/assets/35416174-fad4-424c-96b6-e1e68ecafb74" />
 </p>
-Reward has a relationship to episodes similar to that of a logarithmic function, where it initially grows upwards very fast, but as it grows its growth rate slows down leading to a convergence. In our graph, we see that same relationship, growing initially fast but then slowing down, with a convergence of around 0.75.
 
-This number may seem small, but recall that this number is actually the profit represented as a percentage of the initial stack. We can also observe that in the beginning of training the rewards are scattered more vigoursly, with its rolling mean being very volatile. In contrast, as we see the episode count near its end, that volatility settles down, and the data points less scattered - bunching up mostly around 1.0 (100 % profit).
+_Disclaimer: Unfortunately, the training plot was generated at a lower resolution. I've implemented the fix, but because the training is so long, I'm not allowed to run it again._
 
-_Disclaimer: Unfortunately, the resolution got botched. I've implemented the fix but because the training is so long, I'm not allowed to run it again._
+Reward has a relationship to episodes similar to that of a logarithmic function, where it initially grows upwards very fast, but as it grows its growth rate slows down leading to a convergence. In our graph, we see that same relationship, growing initially fast but then slowing down, where the rolling average stabilizes near 0.75.
+
+This number may seem small, but recall that this number is actually the profit represented as a percentage of the initial stack. We can also observe that in the beginning of training the rewards are widely dispersed, with its rolling mean being very volatile. In contrast, as we see the episode count near its end, that volatility settles down, and the data points less scattered - bunching up mostly around 1.0 (100% profit).
+
 
 
 <p align=center>
@@ -147,11 +149,11 @@ Here we see the Huber Loss function, a function
 
 ### Stack
 * **Language**: Python 
-* **Reinforcement Learning Tools**: PyTorch and gymnasium 
-* **Key Libraries**: NumpPy, treys, matplotlib
+* **Reinforcement Learning Tools**: PyTorch and Gymnasium 
+* **Key Libraries**: NumPy, treys, matplotlib
 
 ### Prerequisites
-This code depends on the following libraries to be installed: **gymnasium**, for the environment building; **matplotlib** to see a graphical representation of the performance; **PyTorch** for constructing the neural network; **treys** for its hand strength calculator, and simulating a deck of cards; as well as **numpy** for its respective functions. You must also make sure that you have Python 3 and pip installed.
+This code depends on the following libraries to be installed: **Gymnasium**, for the environment building; **matplotlib** to see a graphical representation of the performance; **PyTorch** for constructing the neural network; **treys** for its hand strength calculator, and simulating a deck of cards; as well as **numpy** for its respective functions. You must also make sure that you have Python 3 and pip installed.
 
 
 ### Installation
@@ -209,24 +211,31 @@ Furthermore, the state feature, opponent aggression, lose their meaning since th
 
 ### Uniform Opponent Hand Range
 
-The equity calculator uses the assumption that the opponent's unknown hole cards are uniformly distributed between the cards that remain in the deck.
+The equity calculator uses the assumption that the opponent's unknown hole cards are uniformly distributed between the remaining cards.
 
-However, in real poker, the player's actions provide valuable information about their hand. For instance, a raise can increase the likelihood of some strong hand significantly more than it was beforehand. In the current environment, this information is disregarded.
+However, in real poker, the player's actions provide valuable information about their hand. For instance, a raise can increase the likelihood of strong hands significantly more than it was beforehand. In the current environment, this information is disregarded.
 
-Future versions of the environment could estimate the ranges of opponent's hole cards from their betting and use these ranges in their Monte Carlo simulations.
+
 
 
 
 ## Future Improvements
-As talked about in single-hand optimization, the agent exhibits a high bias towards choosing the all-in action. Since each episode simulates a single hand, during training the agent is only alive for one hand per episode; the agent's objective is to maximize expected reward for a given episode, the agent believes that it only has one hand to play to maximize its stack. As a result, the agent decides that betting its entire stack is the best way to do optimize. It neglects the variance and accepts more risk, adopting an all-or-nothing mentality.
 
-This reckless behavior signals that there is a mismatch between the optimization objective and how poker is successfully played. While observing how poker is played professionally, I noticed players rarely go all-in and this is because going all-in introduces high variance. To minimize this professional players make decisions with long term success in mind - they optimize their risk-adjusted return with smaller bets to preserve their stack, and regulate risk management. As they experience more games, then they start deploying more aggressive strategies based on whatever mathematical model of the game they have in their mind. Conversely, due to the environment design, the agent has no concept of long term survival, thus it is unable to be conservative of its stack, mitigate its variance, and regulate the risk it accepts. As a result, it learns to deploy an "all-in all-the-time strategy," and while this aggressive strategy achieves a win rate of [enter metric] - and produces quick, massive profit when successful - it also leads to the agent overcommitting on hands of poor equity. 
+There are several implmentations I have planned to make the agent's strategy closer to perfection, and improve its long-term poker performance.
 
-However, there exists a flaw with even the professional players' strategy. The patient "loading stage" that they commit to in early game, only lasts until they download the data on their opponent's playstyle, then they issue their attack; the downside of this is due to the blinds you must sacrifice each game, depending on the length of this loading stage, it can be quite costly. Luckily, the advantage of reinforcement learning in this project is that the training happens in a simulated environment thousands of times before the inference commences - effectively skipping the costly loading stage and skipping straight to the exploitation while your opponent is stuck learning.
+As discussed in Current Limitations, the current agent exhibits a strong bias toward all-in actions. A primary future improvement is therefore to better align the training objective with long-term poker performance rather than maximizing expected reward within a single hand.
 
-I plan to improve this design by reframing the reward function so that the agent can adapt to a stronger long-term profitability rather than maximizing the reward of a single hand. I would implement this by introducing a metric to measure variance of the reward per hand, and penalties for high-variance actions under low win rate conditions. I also could redesign the environment so that an episode reflects consecutive hands rather than just one. I hypothesize that these changes would enact the agent to reserve its all-in actions for ideal conditions.
+The most direct approach would be to redesign the environment so that each episode consists of multiple consecutive hands. This would extend the agent's decision horizon and allow the consequences of stack preservation and repeated risk-taking to influence future rewards.
 
-Although these changes would likely inflict a lower average profit per single hand, the agent will react with stable return, longer gameplay (more fun), better risk tolerance, and improved decision-making.
+Another approach worth experimenting with is implementing risk sensitivity into the reward function. This would assess the variance and penalize high-variance decisions under unfavorable conditions. However, this would require thorough testing to ensure that reward shaping does not unintentionally discourage profitable aggression.
+
+My hypothesis is that extending the training horizon will reduce the agent's tendency to select all-in actions, reserving them for situations in which the expected return justifies the associated risk. Future testing of this could compare the resulting policy's profitability, action distribution, and return variance against the current single-hand model.
+
+We must also consider the problem of the opponent hand range being uniformly distributed, and the agent's current lack of ability accounting for the information given by the opponent based on their play style. Future versions of the environment could estimate the range of opponent's hole cards from their betting and use these ranges in their Monte Carlo simulation. This could also help to fix the simple opponent-model.
+
+Although the performance of the agent is good, the opponent model which it battles during training is relatively simple. To solve this problem, is to code some popular strategies professional players use, or even modify a copy of our current agent and train them against each other. 
+
+These future improvements may not be entirely necessary, but it lead to the agent acquiring more powerful techniques, which in return,  will make my agent even more successful and profitable.
 
 ## License
 Distributed under the Apache-2.0 License. See [LICENSE](LICENSE) for more information.
