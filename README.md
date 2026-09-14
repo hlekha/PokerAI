@@ -3,12 +3,12 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Framework](https://img.shields.io/badge/Framework-PyTorch%20%2F%20gymnasium-orange.svg)]()
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache2.0-green.svg)](LICENSE)
 <div align="center">
   
   <img width="640" height="380" alt="Las Vegas Wtf GIF by Looney Tunes" src="https://github.com/user-attachments/assets/6bb93a09-cda1-479e-a70b-f5730a2118af" />
 
-  _**A reinforcement learning agent designed to optimize the performance of heads-up No-Limit Texas Hold'em Poker**_
+  _**A reinforcement learning agent designed to optimize the performance of heads-up no-limit Texas Hold'em Poker.**_
   
 </div>
 
@@ -23,10 +23,10 @@ This README covers:
 - [**The Mechanics**](#the-mechanics) \
 . . . . . . . . . . . . . . . [_Architecture_](#architecture) \
 . . . . . . . . . . . . . . . [_Monte Carlo Equity Calculator_](#monte-carlo-equity-calculator) \
-. . . . . . . . . . . . . . . [_Environment_](#state-space) \
+. . . . . . . . . . . . . . . [_Environment_](#environment) \
 . . . . . . . . . . . . . . . [_DDQN_](#ddqn) \
 . . . . . . . . . . . . . . . [_Inference_](#inference)
-- [**Training**](training) \
+- [**Training**](#training) \
 . . . . . . . . . . . . . . . [_Hyperparameters_](#hyperparameters) \
 . . . . . . . . . . . . . . . [_Reward Function_](#reward-function) 
 - [**Results & Performance**](#results--performance)
@@ -37,9 +37,9 @@ This README covers:
 - [**Contact**](#contact)
 
 ## Overview
-A reinforcement learning poker agent built with PyTorch and Gymnasium that learns heads-up Texas Hold'em decision-making through a Double Deep Q-Network (DDQN). This agent was built to optimize profit and win rate while automating the decision-making process given the current game state. 
+A reinforcement learning agent built with PyTorch and Gymnasium, designed for heads-up Texas Hold'em Poker. It learns decision-making through a Double Deep Q-Network (DDQN), and was built to optimize profit and win rate while automating the decision-making process given the current game state. 
 
-This agent uses a Double Deep Q-Network (DDQN) which combines Q-learning, and  deep neural networks. This README, as well as other documents in this repo relies heavily on knowledge of poker terminology. For relevant and foundational dictionary of these terms, you can refer to the [dictionary](./docs/PokerKnowledge.md).
+This agent uses a Double Deep Q-Network which combines Q-learning, and  deep neural networks. This README, as well as other documents in this repo relies heavily on knowledge of poker terminology. For relevant and foundational dictionary of these terms, you can refer to the [dictionary](./docs/PokerKnowledge.md).
 
 ## Key Features
 
@@ -72,7 +72,7 @@ This project utilizes many technical tools, all of which I will go into more det
 </p>
 
 ### Monte Carlo Equity Calculator
-Equity in poker refers to the probability that a player's hand will win against an opponent's hand given the known board cards. This component estimates that probability using a Monte Carlo simulation. The agent relies on equity as one of its primary signals for determining the strength of its position in the game. Since Poker is a game of incomplete information, where the agent knows neither the opponent's cards nor the future community cards, the estimation of equity can help impute missing information with repeated sampling of unknown cards via a Monte Carlo simulation. 
+Equity in poker refers to the probability that a player's hand will win against an opponent's hand given the known board cards. This component estimates that probability using a Monte Carlo simulation. The agent relies on equity as one of its primary signals for determining the strength of its position in the game. Since poker is a game of incomplete information, where the agent knows neither the opponent's cards nor the future community cards, the estimation of equity can help infer missing information with repeated sampling of unknown cards via a Monte Carlo simulation. 
 
 For a single iteration of the MC simulation, the opponent is simulated as well as the remaining pieces of the board. Using the Treys library, we are able to evaluate the two poker hands against the board. The strengths of the two hands are then compared and if the hero's hand is stronger, the count is incremented. For more information on this component of the code go [here](./docs/mc_calculator.md).
 
@@ -96,13 +96,13 @@ The network takes in the 11-dimensional observation vector, goes through a linea
 For a more in-depth description of this component of the code, including some of the math behind it, go [here](./docs/ddqn.md).
 
 ### Inference
-The reason for the inference is that we can test the agent's ability to make optimal decisions and observe if it can handle out of sample data well, while returning the great performance we saw in the training. After training, the policy network weights are saved and loaded into this component so that the agent's learned knowledge can be used independently of the training environment.
+The purpose for this component is to test the agent's ability to make optimal decisions and observe if it can handle out of sample data well, while returning similar performance we saw in the training. After training, the policy network weights are saved and loaded into this component so that the agent's learned knowledge can be used independently of the training environment.
 
-The framework of the inference component is  similar to that of the environment, where they both call the Monte Carlo Equity Calculator, use a similar poker engine, and create an 11-Dimensional Observation vector. After the observation vector is made, it is fed to the trained policy network which assigns a Q-Value for each action where the max argument is then taken, and translated to the respective poker action.
+The framework of the inference component is  similar to that of the environment, where they both call the Monte Carlo Equity Calculator, use a similar poker engine, and create an 11-Dimensional observation vector. After the observation vector is made, it is fed to the trained policy network which assigns a Q-Value for each action; the max argument is then taken, and translated to the respective poker action.
 
 In inference, the value function becomes deterministic rather than using the epsilon-greedy policy. Hence, the agent does not require exploration, and just chooses the "greedy" action - that is the action with the greatest Q-value. 
 
-This component also provides interactive prompting to gather information describing the current state. The information aids in establishing the environment's numerical observation and so forth the observation vector. After the prompting is finished, all necessary game-state information has been collected, the vector is created and passed through the network's weights, and the recommended action is identified and printed.
+This component also provides interactive prompting to gather information describing the current state. The information aids in establishing the environment's numerical observation and consequently the observation vector. After the prompting is finished, all necessary game-state information has been collected, the vector is created and passed through the network's weights, and the recommended action is identified and printed.
 
 For more information about this component, go [here](./docs/inference.md)
 
@@ -113,18 +113,26 @@ For more information about this component, go [here](./docs/inference.md)
 
 
 
-**Batch**: The amount of experiences that is sampled from the memory bank each training step to compute loss update. _Set to 256_ \
-**$\gamma$**: The discount rate. How much the agent values total rewards compared to its immediate rewards. The purpose of this is to make the agent consider long-term consequences of its actions. _Set to 0.97_ \
-**$\epsilon _0$**: The exploration rate. It is the probability of the agent choosing a random action over the optimal action. The purpose of this parameter is to let the agent explore for new potentially (more) optimal routes while taking advantage of the current optimal route it knows. _Set to 0.90_ \
-**$\epsilon _{final}$**: What epsilon will decay to after training is complete. _Set to 0.01_ \
-**$\epsilon _{decay}$**: The decay rate for exploration. It controls how fast epsilon decreases from $\epsilon_0$ to $\epsilon{final}$. _Set to 113750_ \
-**$\tau$**: The soft updates. How much of the online network's weights are blended in the target's network at each training step. The value is usually really low so that the target network shifts into the online network smoothly. This avoids oscillations and divergence in training. _Set to 0.005_ \
+**Batch**: The amount of experiences that is sampled from the memory bank each training step to compute loss update. _Set to 256_ 
+
+**$\gamma$**: The discount rate. How much the agent values total rewards compared to its immediate rewards. The purpose of this is to make the agent consider long-term consequences of its actions. _Set to 0.97_ 
+
+**$\epsilon _0$**: The exploration rate. It is the probability of the agent choosing a random action over the optimal action. The purpose of this parameter is to let the agent explore for new potentially (more) optimal routes while taking advantage of the current optimal route it knows. _Set to 0.90_ 
+
+**$\epsilon _{final}$**: What epsilon will decay to after training is complete. _Set to 0.01_ 
+
+**$\epsilon _{decay}$**: The decay rate for exploration. It controls how fast epsilon decreases from $\epsilon_0$ to $\epsilon{final}$. _Set to 113750_ 
+
+**$\tau$**: The soft updates. How much of the online network's weights are blended in the target's network at each training step. The value is usually really low so that the target network shifts into the online network smoothly. This avoids oscillations and divergence in training. _Set to 0.005_ 
+
 **$\alpha$:** The learning rate. How much the agent considers new information relative to the existing information. The purpose of this parameter is to choose how quickly the agent adapts to new information. The more information is processes the slower the program will be , the lower the value the more conservative it will be. _Set to 3e-4_
+
+
 These hyperparameters represent the current training setup and should be adjusted to how you want to balance the exploration, stabliilty, and speed of the agent.
 
 ### Reward Function
 
-The reward function is built inside the environment but, since it's a crucial step in the training I will talk about it here. The reward function is made up of "terminal" rewards that the agent receives only when it reaches a terminal state - which in our case is the end of a poker game - and the intermediate rewards which I calculated based on an edge metric and a scale factor of 0.3. The scale factor still needs to be tested for the optimal number, but is used to make the edge metric not too significant where the agent overestimates the value of certain action, but not too inconsequential where the agent underestimates the value. The edge is calculated as the difference from the win rate and the pot odds (the ratio of call amount to the pot plus the call amount). The final reward per game is the sum of the intermediate rewards as well as the terminal rewards.
+The reward function is built inside the environment but, since it's a crucial step in the training I will talk about it here. The reward function is made up of terminal rewards that the agent receives only when it reaches a terminal state - which in our case is the end of a poker game - and the intermediate rewards which I calculated based on an edge metric and a scale factor of 0.3. The scale factor still needs to be tested for the optimal number, but is used to make the edge metric not too significant where the agent overestimates the value of certain action, but not too inconsequential where the agent underestimates the value. The edge is calculated as the difference from the win rate and the pot odds (the ratio of call amount to the pot plus the call amount). The final reward per game is the sum of the intermediate rewards and the terminal rewards.
 
 The purpose of the intermediate rewards is to reduce the foresight that the agent needs. Since the probability of winning from the start of the poker game to the end is so volatile, and its final payoff (the accompanying reward for winning) is so distant, the agent needs more signals so it understands more complex patterns of the game. This technique of reward shaping also helps to accelerate training time and sample efficiency. 
 
@@ -135,9 +143,9 @@ The purpose of the intermediate rewards is to reduce the foresight that the agen
 
 _Disclaimer: Unfortunately, the training plot was generated at a lower resolution. I've implemented the fix, but because the training is so long, I'm not allowed to run it again._
 
-Reward has a relationship to episodes similar to that of a logarithmic function, where it initially grows upwards very fast, but as it grows its growth rate slows down leading to a convergence. In our graph, we see that same relationship, growing initially fast but then slowing down, where the rolling average stabilizes near 0.75.
+Reward has a relationship to episodes similar to that of a saturation curve, where it initially grows upwards fast, but as it grows its growth rate slows down leading to a convergence. In our graph, we see that same relationship, growing initially fast but then slowing down, where the rolling average stabilizes near 0.75.
 
-This number may seem small, but recall that this number is actually the profit represented as a percentage of the initial stack. We can also observe that in the beginning of training the rewards are widely dispersed, with its rolling mean being very volatile. In contrast, as we see the episode count near its end, that volatility settles down, and the data points less scattered - bunching up mostly around 1.0 (100% profit).
+This number may seem small, but recall that this number is actually the reward represented as a percentage of the initial stack. We can also observe that in the beginning of training the rewards are widely dispersed, with its rolling mean being very volatile. In contrast, as we see the episode count near its end, that volatility settles down, and the data points less scattered - bunching up mostly around 1.0 (100%).
 
 
 
@@ -154,7 +162,7 @@ Here we see the performance of the loss function over the course of the 87500 ep
 * **Key Libraries**: NumPy, treys, matplotlib
 
 ### Prerequisites
-This code depends on the following libraries to be installed: **Gymnasium**, for the environment building; **matplotlib** to see a graphical representation of the performance; **PyTorch** for constructing the neural network; **treys** for its hand strength calculator, and simulating a deck of cards; as well as **numpy** for its respective functions. You must also make sure that you have Python 3 and pip installed.
+This code relies on the following libraries to be installed: **Gymnasium**, for the environment building; **Matplotlib** to see a graphical representation of the performance; **PyTorch** for constructing the neural network; **Treys** for its hand strength calculator, and simulating a deck of cards; as well as **NumPy** for its respective functions. You must also make sure that you have Python 3 and pip installed.
 
 
 ### Installation
@@ -183,9 +191,9 @@ pip install -r requirements.txt
 ### How to Train
 To begin training the DDQN agent, run:
 ```bash
-python src/DDDQN_Training.py
+python src/DDQN_Training.py
 ```
-Once training is complete the policy network weights are saved and can be loaded later for inference.
+Once training is complete, the policy network weights are saved and can be loaded later for inference.
 
 If you want to run the trained agent then run the following script:
 ```bash
@@ -195,7 +203,7 @@ This will allow you to prompt the user about information regarding the game, and
 
 ## Current Limitations
 
-Although the agent is capable of learning poker actions via reinforcement learning, there are some restrictions in place in the current implementation that influence the strategies in an unfavorable way.
+Although the agent is capable of learning optimal poker actions via reinforcement learning, there are some restrictions in place in the current implementation that influence the strategies in an unfavorable way.
 
 ### Single-Hand Optimization
 
@@ -234,13 +242,14 @@ My hypothesis is that extending the training horizon will reduce the agent's ten
 
 We must also consider the problem of the opponent hand range being uniformly distributed, and the agent's current lack of ability accounting for the information given by the opponent based on their play style. Future versions of the environment could estimate the range of opponent's hole cards from their betting and use these ranges in their Monte Carlo simulation. This could also help to fix the simple opponent-model.
 
-Although the performance of the agent is good, the opponent model which it battles during training is relatively simple. To solve this problem, is to code some popular strategies professional players use, or even modify a copy of our current agent and train them against each other. 
+Although the performance of the agent is good, the opponent model which it battles during training is relatively simple. To solve this problem, some popular strategies professional players use can be coded, or a copy of our current agent can be modified and train them against each other. 
 
-These future improvements may not be entirely necessary, but it lead to the agent acquiring more powerful techniques, which in return,  will make my agent even more successful and profitable.
+These future improvements may not be entirely necessary, but it will lead to the agent acquiring more powerful techniques, which in return,  will make my agent even more successful and profitable.
 
 ## License
 Distributed under the Apache-2.0 License. See [LICENSE](LICENSE) for more information.
 
 ## Contact 
-My LinkedIn: https://linkedin.com/in/hayden-lekha \
+My LinkedIn: https://linkedin.com/in/hayden-lekha 
+
 Project Link: https://github.com/hlekha/PokerAI
