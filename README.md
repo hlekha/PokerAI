@@ -144,7 +144,8 @@ This number may seem small, but recall that this number is actually the profit r
 <p align=center>
   <img width="407" height="377" alt="Screenshot 2026-07-26 095831" src="https://github.com/user-attachments/assets/7ab985e2-d0c4-413e-9ef6-e5280d7396c9" />
 </p>
-Here we see the Huber Loss function, a function
+Here we see the performance of the loss function over the course of the 87500 episodes. The loss sharply reaches to about 0.028 for a short amount of time in the beginning of the training, but then rapidly stabilizes to around 0.012-0.014. Although the function remains volatile for the remainder of the training, with no convergence, just bouncing around in the interval [0.012, 0.014], the number is still very marginal as it shows that the difference between the estimated and actual reward remains close to zero for the entire duration of the training. 
+
 ## Getting Started
 
 ### Stack
