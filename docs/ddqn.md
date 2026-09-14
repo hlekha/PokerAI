@@ -51,5 +51,5 @@ This network also uses the $\epsilon$-greedy policy. This policy utilizes the ep
 ### AdamW Method
 
 ### Huber Loss Function
-
+This function represents the temporal-difference error, r, which is the difference between the estimated reward and the actual reward. The Huber loss function is a regression model that 
 ## Result
