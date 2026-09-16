@@ -244,6 +244,8 @@ We must also consider the problem of the opponent hand range being uniformly dis
 
 Although the performance of the agent is good, the opponent model which it battles during training is relatively simple. To solve this problem, some popular strategies professional players use can be coded, or a copy of our current agent can be modified and train them against each other. 
 
+Lastly, I'd like to include more statistics into the project, especially for the Monte Carlo simulation. Although the math is sufficient enough to trust the component itself, these metrics will provide valuable insights to further tune and improve the model and convert it into presentable data. I hope to include a plot of the probability throughout k iterations of a given MC simulation, and test it for each street for various hand strengths. This will allow me to see how the probability converges, and prove if the n trials I derived for the Law of Large Numbers to be sufficient is true. Furthermore, I'd like to quantify the "good enough" statement for the n trials using a t-distribution and assessing the p-value.
+
 These future improvements may not be entirely necessary, but it will lead to the agent acquiring more powerful techniques, which in return,  will make my agent even more successful and profitable.
 
 ## License
