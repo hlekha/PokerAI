@@ -19,6 +19,7 @@
 
 - [**Overview**](#overview)
 - [**Key Features**](#key-features)
+- [**Repository Structure**](#repository-structure)
 - [**The Mechanics**](#the-mechanics) 
   - [_Architecture_](#architecture) 
   - [_Monte Carlo Equity Calculator_](#monte-carlo-equity-calculator) 
@@ -39,6 +40,7 @@
 A reinforcement learning agent built with PyTorch and Gymnasium, designed for heads-up Texas Hold'em Poker. It learns decision-making through a Double Deep Q-Network (DDQN), and was built to optimize profit and win rate while automating the decision-making process given the current game state. 
 
 This agent uses a Double Deep Q-Network which combines Q-learning, and  deep neural networks. This README, as well as other documents in this repo relies heavily on knowledge of poker terminology. For relevant and foundational dictionary of these terms, you can refer to the [dictionary](./docs/PokerKnowledge.md).
+
 
 ## Key Features
 
@@ -61,6 +63,37 @@ This project utilizes many technical tools, all of which I will go into more det
 - **Reward Shaping** — Uses equity and pot odds to calculate intermediate rewards to guide learning.
 
 - **Playable Trained Model** — Saved model weights can be loaded into an interactive interface for poker decision making.
+
+
+## Repository Structure
+```
+PokerAI/
+├── docs/
+│   ├── PokerKnowledge.md
+│   ├── ddqn.md
+│   ├── environment.md
+│   ├── inference.md
+│   └── mc_calculator.md
+│
+├── notebook/
+│   └── PokerAI.ipynb
+│
+├── src/
+│   ├── DDQN_Training.py
+│   ├── environment.py
+│   ├── inference.py
+│   └── mc_equity_calc.py
+│
+├── tests/
+│   ├── README.md
+│   ├── RewardCollapse_Test1.py
+│   ├── RewardCollapse_Test2.py
+│   └── RewardCollapse_Test3.py
+│
+├── LICENSE
+├── README.md
+└── requirements.txt
+```
 
 
 ## The Mechanics  
@@ -153,6 +186,30 @@ This number may seem small, but recall that this number is actually the reward r
 </p>
 Here we see the performance of the loss function over the course of the 87500 episodes. The loss sharply reaches to about 0.028 for a short amount of time in the beginning of the training, but then rapidly stabilizes to around 0.012-0.014. Although the function remains volatile for the remainder of the training, with no convergence, just bouncing around in the interval [0.012, 0.014], the number is still very marginal as it shows that the difference between the estimated and actual reward remains close to zero for the entire duration of the training. 
 
+## Current Limitations
+
+Although the agent is capable of learning optimal poker actions via reinforcement learning, there are some restrictions in place in the current implementation that influence the strategies in an unfavorable way.
+
+### Single-Hand Optimization
+
+Currently, due to the terminal state being the end of a single poker hand, each individual poker hand is optimized separately. This means that the agent's objective is the maximization of its expected reward for an individual hand rather than maximization of long-term profitability.
+
+One side effect that was observed during training was the agent's tendency to employ very aggressive plays, including all-ins. Even though the agent receives positive expected reward in the current environment by doing so, it does not learn about the long-term effects of taking too many risks since chip preservation and future hands are not included in the agent's objective.
+
+
+### Simplified Opponent Model
+
+Since the current training opponent selects the actions it wants to take randomly, the agent is more geared towards exploiting a stochastic opponent than to playing against a realistic poker opponent.
+
+Furthermore, the state feature, opponent aggression, lose their meaning since the opponent does not have any consistent behavior. Training against multiple opponent strategies or previous versions of the agent could add variety into the learning process.
+
+### Uniform Opponent Hand Range
+
+The equity calculator uses the assumption that the opponent's unknown hole cards are uniformly distributed between the remaining cards.
+
+However, in real poker, the player's actions provide valuable information about their hand. For instance, a raise can increase the likelihood of strong hands significantly more than it was beforehand. In the current environment, this information is disregarded.
+
+
 ## Getting Started
 
 ### Stack
@@ -199,31 +256,6 @@ If you want to run the trained agent then run the following script:
 python src/inference.py
 ```
 This will allow you to prompt the user about information regarding the game, and will continue its prompts until the user ends it. Until then, after the information is sent to the agent, the agent prints out the optimal action for the given scenario.
-
-## Current Limitations
-
-Although the agent is capable of learning optimal poker actions via reinforcement learning, there are some restrictions in place in the current implementation that influence the strategies in an unfavorable way.
-
-### Single-Hand Optimization
-
-Currently, due to the terminal state being the end of a single poker hand, each individual poker hand is optimized separately. This means that the agent's objective is the maximization of its expected reward for an individual hand rather than maximization of long-term profitability.
-
-One side effect that was observed during training was the agent's tendency to employ very aggressive plays, including all-ins. Even though the agent receives positive expected reward in the current environment by doing so, it does not learn about the long-term effects of taking too many risks since chip preservation and future hands are not included in the agent's objective.
-
-
-### Simplified Opponent Model
-
-Since the current training opponent selects the actions it wants to take randomly, the agent is more geared towards exploiting a stochastic opponent than to playing against a realistic poker opponent.
-
-Furthermore, the state feature, opponent aggression, lose their meaning since the opponent does not have any consistent behavior. Training against multiple opponent strategies or previous versions of the agent could add variety into the learning process.
-
-### Uniform Opponent Hand Range
-
-The equity calculator uses the assumption that the opponent's unknown hole cards are uniformly distributed between the remaining cards.
-
-However, in real poker, the player's actions provide valuable information about their hand. For instance, a raise can increase the likelihood of strong hands significantly more than it was beforehand. In the current environment, this information is disregarded.
-
-
 
 
 
