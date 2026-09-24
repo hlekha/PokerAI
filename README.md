@@ -68,28 +68,28 @@ This project utilizes many technical tools, all of which I will go into more det
 ## Repository Structure
 ```
 PokerAI/
-├── docs/
-│   ├── PokerKnowledge.md
-│   ├── ddqn.md
-│   ├── environment.md
-│   ├── inference.md
-│   └── mc_calculator.md
+├── docs/                          — Deeper insights on specific components
+│   ├── PokerKnowledge.md          
+│   ├── ddqn.md                    
+│   ├── environment.md             
+│   ├── inference.md               
+│   └── mc_calculator.md           
 │
 ├── notebook/
-│   └── PokerAI.ipynb
+│   └── PokerAI.ipynb              — Entire notebook
 │
-├── src/
-│   ├── DDQN_Training.py
-│   ├── environment.py
-│   ├── inference.py
-│   └── mc_equity_calc.py
+├── src/                    
+│   ├── DDQN_Training.py           — DDQN establishment and training thereof
+│   ├── environment.py             — Code for the environment
+│   ├── inference.py               — Code for the inference
+│   └── mc_equity_calc.py          — Code for the Monte Carlo equity calculator 
 │
-├── tests/
-│   ├── README.md
-│   ├── RewardCollapse_Test1.py
-│   ├── RewardCollapse_Test2.py
-│   └── RewardCollapse_Test3.py
-│
+├── tests/                         — Experimentation on certain aspects of code, and for troubleshooting logical errors
+│   ├── README.md                  
+│   ├── RewardCollapse_Test1.py    — First iteration of solution to problem
+│   ├── RewardCollapse_Test2.py    — Second iteration
+│   └── RewardCollapse_Test3.py    — Third iteration
+│    
 ├── LICENSE
 ├── README.md
 └── requirements.txt
