@@ -51,5 +51,11 @@ This network also uses the $\epsilon$-greedy policy. This policy utilizes the ep
 ### AdamW Method
 
 ### Huber Loss Function
-This function represents the temporal-difference error, r, which is the difference between the estimated reward and the actual reward. The Huber loss function is a regression model that 
+This function represents the temporal-difference error, r, which is the difference between the estimated reward and the actual reward. In my code I use PyTorch's SmoothL1Loss function, which is a piecewise function identical to a Huber Loss function when their threshold parameters are both 1. As their respective parameters converge to 0, the SmoothL1 loss converts to a regular L1 loss, whereas the Huber Loss converges to a constant 0. When the parameter converges to infinity the SmoothL1Loss converts to a constant 0, and the Huber Loss converts to a standard MSE.
+
+For context, the function takes a residual, a, which is the absolute value of the difference in x and y - and if this residual is less than the threshold parameter, $\beta$ then the loss function is equal to $0.5(\frac {a^2}{\beta})$, otherwise it's equal to $a - 0.5\beta$. The threshold parameter is a cutoff point to get rid of noise
+
 ## Result
+<p align="center">
+  <img width="407" height="377" alt="image" src="https://github.com/user-attachments/assets/e173b074-a33a-4b4d-a699-2f23d7cd7d3e" />
+</p>
